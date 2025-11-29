@@ -37,7 +37,7 @@ if uploaded:
         acea = str(row["ACEA"])
         nome_olio = str(row["Nome olio"])
 
-        return f"{marca}, x{formato} {quantita} Olio Motore Auto {nome_olio} {viscosity} {tipologia} Acea {acea}"
+        return f"{marca}, Olio Motore Auto {formato} {quantita}di {nome_olio} {viscosity} {tipologia} Acea {acea}"
 
     output["Nome dell’articolo"] = df.apply(build_nome_articolo, axis=1)
 
@@ -145,4 +145,5 @@ if uploaded:
         data=buffer.getvalue(),
         file_name="amazon_output.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
     )
