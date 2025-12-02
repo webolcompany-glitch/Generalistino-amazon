@@ -100,12 +100,13 @@ if uploaded:
     output["Volume del liquido"] = df["Formato (L)"]
     output["Unità di volume del liquido"] = "Litri"
 
-    # Search Terms
+    # Search Terms ottimizzati
     def search_terms(row):
         return (
-            f"{row['Viscosità']};{row['Nome olio']};{row['ACEA']};"
-            f"{row['Utilizzo']};{row['Formato (L)']} litri;"
-            "olio motore;olio auto;olio sintetico;olio motore originale"
+            f"{row['Viscosità']} {row['Nome olio']} {row['ACEA']} "
+            f"{row['Tipologia']} {row['Utilizzo']} "
+            f"{row['Formato (L)']}L "
+            "olio motore olio auto lubrificante sintetico diesel benzina manutenzione"
         )
 
     output["Search Terms"] = df.apply(search_terms, axis=1)
