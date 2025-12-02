@@ -27,19 +27,22 @@ if uploaded:
     output["SKU"] = df["Sku"]
     output["Tipo di prodotto"] = "AUTO_OIL"
 
-    # Nome dell’articolo (stringa complessa)
-def build_nome_articolo(row):
-    marca = str(row["Marca"]).strip()
-    viscosity = str(row["Viscosità"]).strip()
-    acea = str(row["ACEA"]).strip()
-    formato = str(row["Formato (L)"]).strip()
-    tipologia = str(row["Tipologia"]).strip()
-    utilizzo = str(row["Utilizzo"]).strip()
+    # -------------------------------
+    # NUOVA FUNZIONE TITOLO AMAZON
+    # -------------------------------
+    def build_nome_articolo(row):
+        marca = str(row["Marca"]).strip()
+        viscosity = str(row["Viscosità"]).strip()
+        acea = str(row["ACEA"]).strip()
+        formato = str(row["Formato (L)"]).strip()
+        tipologia = str(row["Tipologia"]).strip()
+        utilizzo = str(row["Utilizzo"]).strip()
 
-    return (
-        f"Lubrificanti {marca} SAE {viscosity} {acea} "
-        f"{formato}x1L - Olio motore {tipologia} per {utilizzo}"
-    )
+        return (
+            f"Lubrificanti {marca} SAE {viscosity} {acea} "
+            f"{formato}x1L - Olio motore {tipologia} per {utilizzo}"
+        )
+
     output["Nome dell’articolo"] = df.apply(build_nome_articolo, axis=1)
 
     output["Nome del marchio"] = df["Marca"]
@@ -116,7 +119,6 @@ def build_nome_articolo(row):
             val = row[col]
             if pd.notna(val) and str(val).strip() != "":
                 images.append(val)
-        # Pad to 8
         while len(images) < 8:
             images.append("")
         return images[:8]
@@ -146,6 +148,4 @@ def build_nome_articolo(row):
         data=buffer.getvalue(),
         file_name="amazon_output.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-
     )
-
