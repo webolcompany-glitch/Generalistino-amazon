@@ -28,17 +28,18 @@ if uploaded:
     output["Tipo di prodotto"] = "AUTO_OIL"
 
     # Nome dell’articolo (stringa complessa)
-    def build_nome_articolo(row):
-        marca = str(row["Marca"])
-        formato = row["Formato (L)"]
-        quantita = "Litro" if float(formato) == 1 else "Litri"
-        viscosity = str(row["Viscosità"])
-        tipologia = str(row["Tipologia"])
-        acea = str(row["ACEA"])
-        nome_olio = str(row["Nome olio"])
+def build_nome_articolo(row):
+    marca = str(row["Marca"]).strip()
+    viscosity = str(row["Viscosità"]).strip()
+    acea = str(row["ACEA"]).strip()
+    formato = str(row["Formato (L)"]).strip()
+    tipologia = str(row["Tipologia"]).strip()
+    utilizzo = str(row["Utilizzo"]).strip()
 
-        return f"{marca}, Olio Motore Auto {formato} {quantita}di {nome_olio} {viscosity} {tipologia} Acea {acea}"
-
+    return (
+        f"Lubrificanti {marca} SAE {viscosity} {acea} "
+        f"{formato}x1L - Olio motore {tipologia} per {utilizzo}"
+    )
     output["Nome dell’articolo"] = df.apply(build_nome_articolo, axis=1)
 
     output["Nome del marchio"] = df["Marca"]
@@ -147,3 +148,4 @@ if uploaded:
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
     )
+
