@@ -23,12 +23,12 @@ if uploaded:
 
     output = pd.DataFrame()
 
-    # --- POPOLAZIONE COLONNE ---
+    # --- POPOLAZIONE COLONNE BASE ---
     output["SKU"] = df["Sku"]
     output["Tipo di prodotto"] = "AUTO_OIL"
 
     # -------------------------------
-    # NUOVA FUNZIONE TITOLO AMAZON
+    # FUNZIONE TITOLO AMAZON
     # -------------------------------
     def build_nome_articolo(row):
         marca = str(row["Marca"]).strip()
@@ -44,7 +44,6 @@ if uploaded:
         )
 
     output["Nome dell’articolo"] = df.apply(build_nome_articolo, axis=1)
-
     output["Nome del marchio"] = df["Marca"]
     output["Tipo ID di prodotto"] = "Esenzione GTIN"
     output["ID prodotto"] = ""
@@ -60,22 +59,33 @@ if uploaded:
         return "" if float(row["Formato (L)"]) == 205 else "Modello Amazon predefinito"
 
     output["Gruppo spedizione venditore (IT)"] = df.apply(shipping_group, axis=1)
-
     output["Descrizione del prodotto"] = df["Descrizione"]
 
-    # Punti elenco
+    # --- PUNTI ELENCO STANDARDIZZATI ---
     def punto1(row):
-        f = float(row["Formato (L)"])
-        return "1 litro" if f == 1 else f"{int(f)} litri"
+        return "LONG LIFE CONSULTING: azienda italiana specializzata nel settore dei lubrificanti per autovetture, motocicli, industriali, agricoli e nautici."
+
+    def punto2(row):
+        return "PRODOTTO: i prodotti offerti dalla LONG LIFE CONSULTING sono 100% made in Italy, studiati per fornire massime prestazioni, formulati con oli e additivi selezionati."
+
+    def punto3(row):
+        return "SPEDIZIONE: il prodotto è altamente controllato, riscontrato e sigillato prima di effettuare il ritiro per la spedizione."
+
+    def punto4(row):
+        return "ASSISTENZA: Gli uffici di LONG LIFE CONSULTING sono disponibili per qualsiasi tipo di chiarimento per fornire una massima esperienza di acquisto."
+
+    def punto5(row):
+        return "SPECIFICHE TECNICHE: trovi le specifiche tecniche ben visibili sulle foto mostrate in inserzione."
 
     output["Punto elenco 1"] = df.apply(punto1, axis=1)
-    output["Punto elenco 2"] = df["Viscosità"]
-    output["Punto elenco 3"] = df["ACEA"]
-    output["Punto elenco 4"] = df["Utilizzo"]
+    output["Punto elenco 2"] = df.apply(punto2, axis=1)
+    output["Punto elenco 3"] = df.apply(punto3, axis=1)
+    output["Punto elenco 4"] = df.apply(punto4, axis=1)
+    output["Punto elenco 5"] = df.apply(punto5, axis=1)
 
+    # Colonne aggiuntive
     output["Materiale"] = "Lubrificanti Motore"
 
-    # Numero articoli / Quantità per pacco
     def qty_logic(row):
         f = float(row["Formato (L)"])
         return int(f) if f <= 6 else 1
@@ -111,7 +121,7 @@ if uploaded:
 
     output["Search Terms"] = df.apply(search_terms, axis=1)
 
-    # Immagini: trovo fino a 8 immagini in ordine Img1 → Img7
+    # Immagini: fino a 8 immagini
     img_cols = ["Img 1", "Img 2", "Img 3", "Img 4", "Img 5", "Img 6", "Img 7"]
 
     def get_images(row):
